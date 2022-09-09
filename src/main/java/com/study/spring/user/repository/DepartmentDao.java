@@ -1,22 +1,21 @@
 package com.study.spring.user.repository;
 
 import com.study.spring.user.model.Department;
-import com.study.spring.user.model.User;
-import com.study.spring.user.service.connection.ConnectionMaker;
 
+import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
 public class DepartmentDao {
-    ConnectionMaker connectionMaker;
+    DataSource dataSource;
 
-    public DepartmentDao(ConnectionMaker connectionMaker) {
-        this.connectionMaker = connectionMaker;
+    public DepartmentDao(DataSource dataSource) {
+        this.dataSource = dataSource;
     }
 
     public Department selectDepartment(int departmentNo) throws Exception {
-        Connection connection = connectionMaker.getConnection();
+        Connection connection = dataSource.getConnection();
         PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM MY_DEPT WHERE DEPT_NO = ?");
         preparedStatement.setInt(1, departmentNo);
         ResultSet resultSet = preparedStatement.executeQuery();
@@ -33,7 +32,7 @@ public class DepartmentDao {
     }
 
     public void updateDepartment(Department department) throws Exception {
-        Connection connection = connectionMaker.getConnection();
+        Connection connection = dataSource.getConnection();
         PreparedStatement preparedStatement = connection.prepareStatement("UPDATE MY_DEPT SET DEPT_NM = ? WHERE DEPT_NO = ?");
         preparedStatement.setString(1, department.getDepartmentName());
         preparedStatement.setInt(2, department.getDepartmentNo());
